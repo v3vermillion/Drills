@@ -87,9 +87,21 @@ body::before {
 .back:hover, .back:active { color: var(--ink); }
 .eyebrow {
   font-size: .62rem; text-transform: uppercase; letter-spacing: .3em;
-  color: var(--ink-dim);
+  color: var(--chrome);
+  text-shadow: 0 0 7px rgba(210,216,223,.45), 0 0 16px rgba(150,160,170,.22);
 }
 .spacer-12 { width: 3rem; }
+
+/* Tri-color hairline under the top bar — gold · silver · red on every screen */
+.topbar { position: relative; }
+.topbar::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -.85rem; height: 1px;
+  background: linear-gradient(90deg,
+    rgba(255,210,74,.0) 0%, rgba(255,210,74,.6) 18%,
+    rgba(210,216,223,.55) 50%,
+    rgba(255,90,46,.6) 82%, rgba(255,90,46,.0) 100%);
+  opacity: .7;
+}
 
 /* Typography */
 .display { font-family: var(--serif); line-height: 1.12; letter-spacing: .005em; }
@@ -115,6 +127,10 @@ body::before {
 .neon-garnet {
   color: var(--garnet);
   text-shadow: 0 0 7px rgba(232,71,94,.5), 0 0 20px rgba(232,71,94,.28);
+}
+.neon-silver {
+  color: var(--chrome);
+  text-shadow: 0 0 7px rgba(210,216,223,.5), 0 0 18px rgba(150,160,170,.28);
 }
 .chrome-text {
   background: linear-gradient(180deg,#ffffff 0%,#cfd6dd 30%,#7c828b 52%,#cfd6dd 74%,#5a5f66 100%);
@@ -197,6 +213,12 @@ body::before {
 }
 .linkbtn:hover { color: var(--ink); }
 .linkbtn.tborder { border-top: 1px solid var(--line); }
+/* "Not sure which one?" — centered, lowered, with room to breathe */
+.linkbtn.tborder.centered {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding: 1.5rem 0 .5rem;
+}
 
 /* Step dots */
 .dots { display: flex; align-items: center; justify-content: center; gap: .4rem; margin-bottom: 2.5rem; }
@@ -252,6 +274,17 @@ body::before {
 .navbtn:hover { color: var(--ink); }
 .navbtn-label { font-size: .6rem; text-transform: uppercase; letter-spacing: .2em; }
 .navbtn-sub { font-size: .62rem; color: var(--ink-faint); }
+
+/* Color-coded tabs — gold · garnet · silver, each with a soft neon glow */
+.navbtn--gold   { color: var(--gold); }
+.navbtn--garnet { color: var(--garnet); }
+.navbtn--silver { color: var(--chrome); }
+.navbtn--gold svg   { filter: drop-shadow(0 0 6px rgba(255,210,74,.55)); }
+.navbtn--garnet svg { filter: drop-shadow(0 0 6px rgba(232,71,94,.5)); }
+.navbtn--silver svg { filter: drop-shadow(0 0 6px rgba(210,216,223,.5)); }
+.navbtn--gold:hover   { color: var(--gold-soft); }
+.navbtn--garnet:hover { color: #ff8fa1; }
+.navbtn--silver:hover { color: #ffffff; }
 
 /* Verse / quote blocks */
 .quote {

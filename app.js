@@ -419,12 +419,12 @@ SCREENS.home = function () {
       ${tile("judgment", "Judgment", "Shame · self-hate · “I deserve this”")}
     </div>
 
-    <button class="linkbtn tborder" data-go="triage">Not sure which one? →</button>
+    <button class="linkbtn tborder centered" data-go="triage">Not sure which one? →</button>
 
     <div class="botnav">
-      <button class="navbtn" data-go="history">${icon("history", 16)}<span class="navbtn-label">Log</span><span class="navbtn-sub">${count}</span></button>
-      <button class="navbtn" data-go="sos">${icon("alert", 16)}<span class="navbtn-label">SOS</span></button>
-      <button class="navbtn" data-go="settings">${icon("settings", 16)}<span class="navbtn-label">Settings</span></button>
+      <button class="navbtn navbtn--gold" data-go="history">${icon("history", 16)}<span class="navbtn-label">Log</span><span class="navbtn-sub">${count}</span></button>
+      <button class="navbtn navbtn--garnet" data-go="sos">${icon("alert", 16)}<span class="navbtn-label">SOS</span></button>
+      <button class="navbtn navbtn--silver" data-go="settings">${icon("settings", 16)}<span class="navbtn-label">Settings</span></button>
     </div>`;
 
   $$("[data-go]").forEach((b) => b.addEventListener("click", () => App.go(b.dataset.go)));
