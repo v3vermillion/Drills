@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <!-- Carbon-fiber chromatic background -->
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0%"  stop-color="#2a2d31"/>
+      <stop offset="42%" stop-color="#18191c"/>
+      <stop offset="100%" stop-color="#070708"/>
+    </radialGradient>
+    <linearGradient id="carbonA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#26282c"/>
+      <stop offset="1" stop-color="#101113"/>
+    </linearGradient>
+    <pattern id="carbon" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="16" height="16" fill="url(#carbonA)"/>
+      <rect width="8" height="8" fill="#2c2f33" opacity="0.55"/>
+      <rect x="8" y="8" width="8" height="8" fill="#2c2f33" opacity="0.55"/>
+    </pattern>
+
+    <!-- Chrome / silver rim -->
+    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#fefefe"/>
+      <stop offset="0.18" stop-color="#cfd4da"/>
+      <stop offset="0.5" stop-color="#6e747c"/>
+      <stop offset="0.82" stop-color="#b9c0c8"/>
+      <stop offset="1"   stop-color="#3a3e44"/>
+    </linearGradient>
+
+    <!-- Red dome -->
+    <radialGradient id="dome" cx="42%" cy="32%" r="78%">
+      <stop offset="0%"  stop-color="#ff7a4a"/>
+      <stop offset="30%" stop-color="#f23b22"/>
+      <stop offset="70%" stop-color="#c11b14"/>
+      <stop offset="100%" stop-color="#7c0d0a"/>
+    </radialGradient>
+
+    <!-- Gold -->
+    <radialGradient id="gold" cx="40%" cy="32%" r="75%">
+      <stop offset="0%"  stop-color="#fff6c9"/>
+      <stop offset="35%" stop-color="#ffd24a"/>
+      <stop offset="72%" stop-color="#e8a51d"/>
+      <stop offset="100%" stop-color="#9c6b07"/>
+    </radialGradient>
+    <linearGradient id="goldBar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff0b0"/>
+      <stop offset="0.5" stop-color="#f6c33a"/>
+      <stop offset="1" stop-color="#a9760c"/>
+    </linearGradient>
+
+    <filter id="redGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="20" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="goldGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="0" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#carbon)" opacity="0.5"/>
+  <ellipse cx="512" cy="430" rx="430" ry="430" fill="#ff3a1f" opacity="0.10" filter="url(#redGlow)"/>
+
+  <!-- Sound waves -->
+  <g stroke-linecap="round" fill="none" opacity="0.9" filter="url(#goldGlow)">
+    <g stroke="#ffd24a">
+      <path d="M232 300 q-70 150 0 300" stroke-width="14" opacity="0.85"/>
+      <path d="M168 250 q-104 230 0 460" stroke-width="12" opacity="0.5"/>
+    </g>
+    <g stroke="#ff5a2e">
+      <path d="M792 300 q70 150 0 300" stroke-width="14" opacity="0.85"/>
+      <path d="M856 250 q104 230 0 460" stroke-width="12" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- Mounting bracket -->
+  <rect x="476" y="118" width="72" height="150" rx="14" fill="url(#chrome)" stroke="#2a2d31" stroke-width="4"/>
+  <circle cx="512" cy="150" r="13" fill="#2a2d31"/>
+
+  <!-- Bell group -->
+  <g filter="url(#redGlow)">
+    <!-- outer chrome rim -->
+    <circle cx="512" cy="560" r="300" fill="url(#chrome)"/>
+    <circle cx="512" cy="560" r="300" fill="none" stroke="#0c0d0f" stroke-width="6"/>
+    <!-- red dome -->
+    <circle cx="512" cy="560" r="262" fill="url(#dome)"/>
+    <!-- inner gold ring -->
+    <circle cx="512" cy="560" r="262" fill="none" stroke="url(#goldBar)" stroke-width="10" opacity="0.9"/>
+    <!-- ridge lines -->
+    <g stroke="#7c0d0a" stroke-width="5" opacity="0.45" fill="none">
+      <circle cx="512" cy="560" r="210"/>
+      <circle cx="512" cy="560" r="150"/>
+    </g>
+    <!-- top highlight -->
+    <ellipse cx="430" cy="430" rx="150" ry="90" fill="#ffffff" opacity="0.22"/>
+    <!-- central gold hub -->
+    <circle cx="512" cy="560" r="92" fill="url(#gold)" stroke="#7a5406" stroke-width="6"/>
+    <circle cx="512" cy="560" r="40" fill="#8a1410" stroke="url(#goldBar)" stroke-width="8"/>
+    <circle cx="512" cy="560" r="13" fill="#ffe9a3"/>
+  </g>
+
+  <!-- Striker / clapper -->
+  <g filter="url(#goldGlow)">
+    <rect x="500" y="826" width="24" height="80" rx="10" fill="url(#chrome)"/>
+    <circle cx="512" cy="912" r="46" fill="url(#gold)" stroke="#7a5406" stroke-width="6"/>
+    <ellipse cx="498" cy="898" rx="16" ry="11" fill="#fff6c9" opacity="0.85"/>
+  </g>
+</svg>
