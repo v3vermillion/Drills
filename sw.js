@@ -1,7 +1,7 @@
 /* The Drill — service worker.
    App-shell caching for full offline use + Web Push display handler. */
 
-const CACHE = "drill-cache-v2";
+const CACHE = "drill-cache-v3";
 const ASSETS = [
   "./",
   "./index.html",
