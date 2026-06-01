@@ -1,7 +1,7 @@
 /* The Drill — service worker.
    App-shell caching for full offline use + Web Push display handler. */
 
-const CACHE = "drill-cache-v1";
+const CACHE = "drill-cache-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,6 +14,7 @@ const ASSETS = [
   "./assets/icon-maskable-512.png",
   "./assets/apple-touch-icon.png",
   "./assets/favicon-32.png",
+  "./assets/cross.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -42,17 +43,19 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cache-first for static assets, then network (and cache it).
+  // Stale-while-revalidate for static assets: serve cache instantly (offline-
+  // safe and fast), and refresh the cache in the background so code/style
+  // updates always land on the next launch instead of sticking forever.
   event.respondWith(
     caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req).then((res) => {
+      const network = fetch(req).then((res) => {
         if (res && res.ok && res.type === "basic") {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
         }
         return res;
       }).catch(() => cached);
+      return cached || network;
     })
   );
 });

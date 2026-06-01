@@ -31,10 +31,12 @@ self-power tally. The drill's action is now:
 2. *“God, be merciful to me, a sinner.”* (Luke 18:13)
 3. A **5-minute stillness timer** with peaceful, synthesized fingerpicked guitar and
    a warm **chime** when it ends. The screen stays awake while it runs.
-4. Said **out loud** — the prayer to St. Michael the Archangel:
+4. Said **out loud**:
    *“I am here, Lord. Thank you for saving me. Please guard me against all evil.”*
-   paired with **2 Corinthians 4:18** (which replaced Philippians 4:13 — a verse of
+   closing on **2 Corinthians 4:18** (which replaced Philippians 4:13 — a verse of
    contentment rather than strength).
+
+A glowing **cross** sits quietly behind every screen as a steady reminder.
 
 ---
 

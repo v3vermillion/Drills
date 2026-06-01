@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1500" viewBox="0 0 1000 1500">
+  <defs>
+    <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"    stop-color="#41454b"/>
+      <stop offset="0.18" stop-color="#eef2f6"/>
+      <stop offset="0.42" stop-color="#aab1b9"/>
+      <stop offset="0.58" stop-color="#dfe5ea"/>
+      <stop offset="0.82" stop-color="#6a7077"/>
+      <stop offset="1"    stop-color="#2f3338"/>
+    </linearGradient>
+    <linearGradient id="goldedge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#fff3c0"/>
+      <stop offset="0.5" stop-color="#f6c63c"/>
+      <stop offset="1"   stop-color="#a9760c"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="40%" r="55%">
+      <stop offset="0%"  stop-color="#ffd24a" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#ff7a2e" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ff5a2e" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="16" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- radiant halo behind the crossing -->
+  <circle cx="500" cy="560" r="430" fill="url(#halo)"/>
+
+  <g filter="url(#glow)">
+    <!-- gold edge underlay (slightly larger) -->
+    <g fill="url(#goldedge)">
+      <rect x="416" y="120" width="168" height="1250" rx="26"/>
+      <rect x="196" y="430" width="608" height="168" rx="26"/>
+    </g>
+    <!-- chrome body -->
+    <g fill="url(#chrome)" stroke="#1b1d20" stroke-width="3">
+      <rect x="428" y="132" width="144" height="1226" rx="20"/>
+      <rect x="208" y="442" width="584" height="144" rx="20"/>
+    </g>
+    <!-- inner gold inlay line -->
+    <g fill="none" stroke="url(#goldedge)" stroke-width="5" opacity="0.85">
+      <rect x="452" y="156" width="96" height="1178" rx="12"/>
+      <rect x="232" y="466" width="536" height="96" rx="12"/>
+    </g>
+    <!-- top-left bevel highlight -->
+    <g fill="#ffffff" opacity="0.28">
+      <rect x="440" y="144" width="34" height="1200" rx="16"/>
+      <rect x="220" y="454" width="560" height="30" rx="14"/>
+    </g>
+  </g>
+</svg>

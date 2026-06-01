@@ -55,13 +55,15 @@ assert(!/push.?up/i.test(txt()), "no push-ups anywhere in spike");
 click('[data-skip]');
 assert(app.querySelector('[data-next]'), "step3: continue appears after timer");
 click('[data-next]'); // -> step 4 gratitude
-assert(txt().includes("I am here, Lord"), "step4: new spoken prayer");
+assert(txt().includes("I am here, Lord"), "step4: spoken prayer present");
 assert(txt().includes("guard me against all evil"), "step4: prayer full");
-assert(txt().includes("Michael"), "step4: St Michael referenced");
+assert(!/michael/i.test(txt()), "step4: NO St Michael reference");
 assert(txt().includes("2 Corinthians 4:18"), "step4: 2 Cor 4:18 present");
 assert(txt().includes("temporary") && txt().includes("eternal"), "step4: verse text");
+assert(!txt().includes("look what I just did"), "step4: push-up-era sentence removed");
 click('[data-next]'); // finish -> complete
 assert(txt().includes("Logged"), "spike completion logs");
+assert(!txt().includes("answer to the Judge"), "complete: subtitle removed");
 click('[data-home]');
 
 console.log("VACUUM");
@@ -100,6 +102,8 @@ console.log("TRIAGE / HISTORY / SIREN / SOS / SETTINGS");
 click('[data-go="triage"]'); assert(txt().includes("feel like in your body"), "triage renders"); click('[data-back]'); // -> home
 click('[data-go="history"]'); assert(txt().includes("The record"), "history renders");
 assert(txt().includes("min stillness"), "history shows stillness (spike logged)");
+assert(/\b(EST|EDT|ET|GMT)\b/.test(txt()), "log shows Eastern timezone label");
+assert(/20\d\d/.test(txt()), "log shows full date with year");
 click('[data-go="siren"]'); assert(txt().includes("Self-righteousness"), "siren renders");
 click('[data-back]'); // siren -> history
 assert(txt().includes("The record"), "siren back returns to history");
