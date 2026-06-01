@@ -1,0 +1,18 @@
+{
+  "name": "drill-tools",
+  "private": true,
+  "type": "module",
+  "description": "Build-time tooling only (icon rasterization, VAPID/push helpers, smoke test). Not shipped to the app.",
+  "scripts": {
+    "icons": "node gen-icons.mjs",
+    "smoke": "node smoke.mjs",
+    "send": "node send-push.mjs"
+  },
+  "dependencies": {
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3",
+    "sharp": "^0.33.5"
+  }
+}
