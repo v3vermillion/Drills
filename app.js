@@ -120,6 +120,20 @@ const $ = (sel, ctx = root()) => ctx.querySelector(sel);
 const $$ = (sel, ctx = root()) => Array.from(ctx.querySelectorAll(sel));
 function on(sel, ev, fn, ctx = root()) { const el = $(sel, ctx); if (el) el.addEventListener(ev, fn); return el; }
 
+/* Format a timestamp for the Log, in Eastern time (EST/EDT). */
+function fmtLog(ts) {
+  const d = new Date(ts);
+  const tzOpt = { timeZone: "America/New_York" };
+  const date = d.toLocaleDateString("en-US", { ...tzOpt, weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  const time = d.toLocaleTimeString("en-US", { ...tzOpt, hour: "numeric", minute: "2-digit" });
+  let tz = "ET";
+  try {
+    tz = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", timeZoneName: "short" })
+      .formatToParts(d).find((p) => p.type === "timeZoneName").value;
+  } catch (e) {}
+  return { date, time: `${time} ${tz}` };
+}
+
 /* Cluster theming — unified gold / red / garnet (silver-carbon ground) */
 const CLUSTER = {
   spike:    { color: "var(--red)",    glow: "neon-red",    btn: "btn--red",    quote: "red",    icon: "flame" },
@@ -365,7 +379,9 @@ const Reminder = (() => {
 
 const App = {
   completedCluster: null,
+  _cleanup: null,
   go(route) {
+    if (this._cleanup) { try { this._cleanup(); } catch (e) {} this._cleanup = null; }
     AudioEngine.stop(0.3); Wake.release();
     window.scrollTo(0, 0);
     SCREENS[route] ? SCREENS[route]() : SCREENS.home();
@@ -384,20 +400,20 @@ const SCREENS = {};
 SCREENS.home = function () {
   const count = loadDrills().length;
   const tile = (c, label, sub) => `
-    <button class="card card-tap tile" data-go="${c}">
-      <span class="tile-ico" style="background:color-mix(in srgb, ${CLUSTER[c].color} 14%, transparent); color:${CLUSTER[c].color}">${icon(CLUSTER[c].icon)}</span>
-      <span class="tile-body"><span class="tile-title display">${label}</span><span class="tile-sub">${sub}</span></span>
+    <button class="card card-tap tile home-tile" data-go="${c}" style="--cc:${CLUSTER[c].color}">
+      <span class="tile-ico" style="background:color-mix(in srgb, ${CLUSTER[c].color} 16%, transparent); color:${CLUSTER[c].color}; box-shadow:0 0 16px color-mix(in srgb, ${CLUSTER[c].color} 32%, transparent)">${icon(CLUSTER[c].icon, 22)}</span>
+      <span class="tile-body"><span class="tile-title ${CLUSTER[c].glow}">${label}</span><span class="tile-sub">${sub}</span></span>
       <span class="tile-arrow">→</span>
     </button>`;
 
   root().innerHTML = `
-    <div style="padding:1.5rem 0 2.5rem">
-      <div class="eyebrow" style="letter-spacing:.35em;margin-bottom:.4rem">The Drill</div>
+    <div style="padding:2rem 0 2.75rem">
+      <div class="eyebrow" style="letter-spacing:.35em;margin-bottom:.5rem">The Drill</div>
       <div class="display sz-3xl chrome-text" style="line-height:1.1">Pre-rehearsed.<br/>Not fire-time decisions.</div>
       <div class="sz-xs muted mt-4 tracking">Marker · <span class="neon-gold">${MARKER_DATE}</span></div>
     </div>
 
-    <div class="list mb-8">
+    <div class="home-list mb-8">
       ${tile("spike", "Spike", "Lust · stress · anxiety · hate")}
       ${tile("vacuum", "Vacuum", "Empty gap · cruise · drift")}
       ${tile("judgment", "Judgment", "Shame · self-hate · “I deserve this”")}
@@ -466,6 +482,9 @@ SCREENS.spike = function () {
   const TOTAL = 300; // 5 minutes
   let remaining = TOTAL, ticking = false, raf = null, endAt = 0, completed = false;
 
+  // Cancel the timer loop + audio + wake-lock if the user leaves this screen.
+  App._cleanup = () => { ticking = false; if (raf) { cancelAnimationFrame(raf); raf = null; } };
+
   function finish() {
     logDrill({ cluster: "spike", stillnessSec: TOTAL, durationMs: Date.now() - start });
     App.done("spike");
@@ -522,13 +541,12 @@ SCREENS.spike = function () {
     } else {
       body = `
         <div class="kicker neon-red">Gratitude · Step 4 of 4</div>
-        <div class="sz-sm muted mb-6 tracking">Out loud. The prayer to St. Michael the Archangel.</div>
+        <div class="sz-sm muted mb-6 tracking">Say it out loud.</div>
         <div class="display sz-2xl italic mb-8 leading">“I am here, Lord.<br/>Thank you for saving me.<br/>Please guard me against all evil.”</div>
-        <div class="quote red mb-8 fade-in">
+        <div class="quote red mb-10 fade-in">
           <div class="quote-text">“Fix our eyes not on what is seen but unseen — what is seen is temporary, what is unseen is eternal.”</div>
           <div class="ref mt-2">2 Corinthians 4:18</div>
         </div>
-        <div class="sz-sm muted mb-10 tracking leading">The moment doesn't terminate in “look what I just did.” It ends Godward.</div>
         <button class="btn btn--red" data-next>Drill complete</button>`;
     }
 
@@ -577,7 +595,12 @@ SCREENS.spike = function () {
       step += 1; remaining = TOTAL; completed = false; paint();
     });
     const tg = $("[data-toggle]"); if (tg) tg.addEventListener("click", () => ticking ? pauseTimer() : startTimer());
-    const sk = $("[data-skip]"); if (sk) sk.addEventListener("click", () => { if (raf) cancelAnimationFrame(raf); AudioEngine.stop(0.4); Wake.release(); timerComplete(); });
+    const sk = $("[data-skip]"); if (sk) sk.addEventListener("click", () => {
+      ticking = false; completed = true;
+      if (raf) cancelAnimationFrame(raf);
+      AudioEngine.stop(0.4); Wake.release();
+      paint(); // ends the stillness quietly — no completion chime when skipped
+    });
   }
 
   paint();
@@ -772,8 +795,7 @@ SCREENS.complete = function () {
   root().innerHTML = `
     <div class="center" style="padding-top:6rem">
       <div class="check-orb" style="background:color-mix(in srgb, ${color} 16%, transparent);color:${color};box-shadow:0 0 28px color-mix(in srgb, ${color} 40%, transparent)">${icon("check", 30)}</div>
-      <div class="display sz-2xl mb-3">Logged.</div>
-      <div class="sz-sm muted leading mb-12" style="padding:0 1rem">The record is the answer to the Judge later.<br/>Navigate by the record, not the feeling.</div>
+      <div class="display sz-2xl mb-12">Logged.</div>
       <button class="btn btn--silver" data-home>Home</button>
     </div>`;
   on("[data-home]", "click", () => App.go("home"));
@@ -793,13 +815,14 @@ SCREENS.history = function () {
 
   const rows = drills.map((d) => {
     const cl = CLUSTER[d.cluster] || CLUSTER.spike;
-    const when = new Date(d.ts).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    const { date, time } = fmtLog(d.ts);
     return `
-      <div class="card row" style="border-color:${cl.color}">
-        <div class="row-top">
-          <div class="row-cluster" style="color:${cl.color}">${icon(cl.icon, 14)} ${d.cluster}${d.subtype ? ` <span class="muted">· ${esc(d.subtype)}</span>` : ""}</div>
-          <div class="row-time">${when}</div>
+      <div class="card logrow" style="--cc:${cl.color}">
+        <div class="logrow-head">
+          <span class="logrow-drill" style="color:${cl.color}">${icon(cl.icon, 14)} ${d.cluster}${d.subtype ? ` <span class="muted">· ${esc(d.subtype)}</span>` : ""}</span>
+          <span class="logrow-date">${date}</span>
         </div>
+        <div class="logrow-time">${time}</div>
         ${d.anchor ? `<div class="serif italic sz-sm mt-2">“${esc(d.anchor)}”</div>` : ""}
         ${d.stillnessSec ? `<div class="sz-xs muted mt-2">${Math.round(d.stillnessSec / 60)} min stillness</div>` : ""}
         ${d.taps ? `<div class="sz-xs muted mt-2">case closed ×${d.taps}</div>` : ""}
